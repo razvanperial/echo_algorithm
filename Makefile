@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -pthread
 
 # Source files
-SRC = main.c graph.c
+SRC = main.c graph.c echo.c
 
 # Executable
 EXEC = echo_algorithm
