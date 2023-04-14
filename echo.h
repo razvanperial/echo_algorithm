@@ -36,7 +36,7 @@ typedef struct ThreadArgs
 } threadargs_t;
 
 // function to add a message to the buffer
-void addMessage(int src, int dest, char *data, message_t **buffer, pthread_mutex_t *message, int *first, pthread_mutex_t *first_mutex);
+void addMessage(int src, int dest, char *data, message_t **buffer, pthread_mutex_t *buffer_mutex, int *flags, pthread_mutex_t *flags_mutex);
 
 // function to receive a message from the buffer
 received_message_t *receiveMessage(int dest, message_t **buffer);

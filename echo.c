@@ -5,7 +5,7 @@
 #include "echo.h"
 
 // function to add a message to the buffer
-void addMessage(int src, int dest, char *data, message_t **buffer, pthread_mutex_t *message, int *first, pthread_mutex_t *first_mutex)
+void addMessage(int src, int dest, char *data, message_t **buffer, pthread_mutex_t *buffer_mutex, int *flags, pthread_mutex_t *flags_mutex)
 {
     message_t *newMessage = (message_t *)malloc(sizeof(message_t));
     newMessage->data = (char *)malloc(strlen(data) + 1); // Allocate memory for data
@@ -13,23 +13,23 @@ void addMessage(int src, int dest, char *data, message_t **buffer, pthread_mutex
     newMessage->next = NULL;
     newMessage->src = src;
 
-    pthread_mutex_lock(first_mutex);
-    if (first[dest] == 0)
+    pthread_mutex_lock(flags_mutex);
+    if (flags[dest] == 0)
     {
-        first[dest] = 1;
+        flags[dest] = 1;
         buffer[dest] = newMessage;
         newMessage->next = NULL;
-        pthread_mutex_unlock(&message[dest]);
+        pthread_mutex_unlock(&buffer_mutex[dest]);
     }
     else
     {
-        pthread_mutex_lock(&message[dest]);
+        pthread_mutex_lock(&buffer_mutex[dest]);
 
         newMessage->next = buffer[dest];
         buffer[dest] = newMessage;
-        pthread_mutex_unlock(&message[dest]);
+        pthread_mutex_unlock(&buffer_mutex[dest]);
     }
-    pthread_mutex_unlock(first_mutex);
+    pthread_mutex_unlock(flags_mutex);
 }
 
 // function to receive a message from the buffer
